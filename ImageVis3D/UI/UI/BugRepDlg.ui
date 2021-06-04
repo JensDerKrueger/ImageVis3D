@@ -1,0 +1,362 @@
+<ui version="4.0" >
+ <class>BugRepDlg</class>
+ <widget class="QDialog" name="BugRepDlg" >
+  <property name="windowModality" >
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>820</width>
+    <height>847</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Issue Report Dialog</string>
+  </property>
+  <property name="modal" >
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QLabel" name="label_Icon" >
+     <property name="font" >
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="toolTip" >
+      <string/>
+     </property>
+     <property name="whatsThis" >
+      <string>The First "Computer Bug" Moth found trapped between points at Relay # 70, Panel F, of the Mark II Aiken Relay Calculator while it was being tested at Harvard University, 9 September 1945. The operators affixed the moth to the computer log, with the entry: "First actual case of bug being found". They put out the word that they had "debugged" the machine, thus introducing the term "debugging a computer program". In 1988, the log, with the moth still taped by the entry, was in the Naval Surface Warfare Center Computer Museum at Dahlgren, Virginia.</string>
+     </property>
+     <property name="text" >
+      <string>Icon</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_BasicInfo" >
+     <property name="title" >
+      <string>Basic Information</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4" >
+      <item>
+       <widget class="QLabel" name="label_IssueDesc" >
+        <property name="text" >
+         <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-weight:600;">Please describe your issue with ImageVis3D here.&lt;/span> The more specific you are the better. &lt;span style=" font-style:italic;">Optimally, you should give a list of steps to reproduce your problem.&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+        </property>
+        <property name="wordWrap" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTextEdit" name="textEdit_desc" />
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_AddInfo" >
+     <property name="title" >
+      <string>Additional Information</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3" >
+      <item>
+       <widget class="QFrame" name="frame_4" >
+        <property name="frameShape" >
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow" >
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="lineWidth" >
+         <number>0</number>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_4" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QCheckBox" name="checkBox_IncludeSysinfo" >
+           <property name="text" >
+            <string>Submit System Information</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_IncludeLog" >
+           <property name="text" >
+            <string>Submit Debug Log</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_Dataset" >
+        <property name="text" >
+         <string>Submit data files</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frame_3" >
+        <property name="frameShape" >
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow" >
+         <enum>QFrame::Raised</enum>
+        </property>
+        <property name="lineWidth" >
+         <number>0</number>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_3" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QListWidget" name="listWidget_files" />
+         </item>
+         <item>
+          <widget class="QFrame" name="frame_5" >
+           <property name="frameShape" >
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow" >
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="lineWidth" >
+            <number>0</number>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5" >
+            <property name="margin" >
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="pushButton_Add" >
+              <property name="text" >
+               <string>Add Files</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_remove" >
+              <property name="enabled" >
+               <bool>false</bool>
+              </property>
+              <property name="text" >
+               <string>Remove File</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer" >
+              <property name="orientation" >
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0" >
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_PersonalInfo" >
+     <property name="title" >
+      <string>Personal Information</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2" >
+      <item>
+       <widget class="QLabel" name="label" >
+        <property name="text" >
+         <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:8pt; font-weight:600;">Sending Personal information is entirely optional&lt;/span>&lt;span style=" font-size:8pt;">.  However, we encourage you to submit you name and email to allow our bugtracking team to contact you when the issue is resolved, or obtain further information regarding this issue.&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+        </property>
+        <property name="wordWrap" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="frame_2" >
+        <property name="frameShape" >
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow" >
+         <enum>QFrame::Raised</enum>
+        </property>
+        <property name="lineWidth" >
+         <number>0</number>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_Name" >
+           <property name="text" >
+            <string>Your Name</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_name" />
+         </item>
+         <item>
+          <widget class="QLabel" name="label_3" >
+           <property name="text" >
+            <string>Your Email</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_email" />
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame" >
+     <property name="frameShape" >
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow" >
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="lineWidth" >
+      <number>0</number>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout" >
+      <item>
+       <spacer name="horizontalSpacer" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>328</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_Send" >
+        <property name="text" >
+         <string>Send Report</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_Abort" >
+        <property name="text" >
+         <string>Cancel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton_Abort</sender>
+   <signal>clicked()</signal>
+   <receiver>BugRepDlg</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>801</x>
+     <y>828</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>526</x>
+     <y>496</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_Send</sender>
+   <signal>clicked()</signal>
+   <receiver>BugRepDlg</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>718</x>
+     <y>828</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>528</x>
+     <y>451</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_Add</sender>
+   <signal>clicked()</signal>
+   <receiver>BugRepDlg</receiver>
+   <slot>AddFiles()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>765</x>
+     <y>450</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>578</x>
+     <y>699</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_remove</sender>
+   <signal>clicked()</signal>
+   <receiver>BugRepDlg</receiver>
+   <slot>RemoveFile()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>740</x>
+     <y>485</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>814</x>
+     <y>706</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>AddFiles()</slot>
+  <slot>RemoveFile()</slot>
+ </slots>
+</ui>

@@ -1,0 +1,360 @@
+Introduction
+------------
+
+ImageVis3D supports some file formats "out of the box".  In many cases,
+the easiest route to getting your data into ImageVis3D is to write it
+out in a format the program can read natively.  However, this might not
+always be a viable option.  This section describes the work involved
+in enabling ImageVis3D to convert a new file format into UVF.
+
+Writing a converter is a good choice if you have pre-existing,
+single-block data which is not readable by any of the converters which
+ship with ImageVis3D.
+
+ImageVis3D Conversion Steps
+---------------------------
+
+ImageVis3D's IO scheme is based around a multi-stage paradigm.  In
+the first stage, converters identify relevant metadata and modify the
+data into a raw input stream.  Subsequent stages perform tasks such
+as endian conversion, computing derived metadata, and generating the
+hierarchy of bricks needed for interactive rendering.
+
+Writing Your Converter
+----------------------
+
+The basic steps involved in writing your own converter are:
+
+1. Create a new class derived from `RAWConverter`
+2. Register your format's file extension with the IO subsystem.
+3. Modify a conversion routine to create metadata and (potentially) rewrite it
+as a raw data stream.
+
+Converter Skeleton
+~~~~~~~~~~~~~~~~~~
+
+You'll need to create both a header file (`.h`) and an implementation
+file (`.cpp`) for your new format.  They should define a new
+class, derived from `RAWConverter`, which implements the methods
+`ConvertToRAW`, `ConvertToNative`, and `CanExportData`.  Here is an
+example header file:
+
+[c++]
+source~~~~
+#include "RAWConverter.h"
+
+class YourConverter : public RAWConverter {
+public:
+  YourConverter();
+  virtual ~YourConverter() {}
+
+  virtual bool ConvertToRAW(const std::string& strSourceFilename,
+                            const std::string& strTempDir,
+                            bool bNoUserInteraction,
+                            UINT64& iHeaderSkip, UINT64& iComponentSize,
+                            UINT64& iComponentCount, bool& bConvertEndianness,
+                            bool& bSigned, bool& bIsFloat,
+                            UINT64VECTOR3& vVolumeSize,
+                            FLOATVECTOR3& vVolumeAspect,
+                            std::string& strTitle,
+                            UVFTables::ElementSemanticTable& eType,
+                            std::string& strIntermediateFile,
+                            bool& bDeleteIntermediateFile);
+
+  virtual bool ConvertToNative(const std::string& strRawFilename,
+                               const std::string& strTargetFilename,
+                               UINT64 iHeaderSkip, UINT64 iComponentSize,
+                               UINT64 iComponentCount, bool bSigned,
+                               bool bFloatingPoint,  UINT64VECTOR3 vVolumeSize,
+                               FLOATVECTOR3 vVolumeAspect,
+                               bool bNoUserInteraction,
+                               const bool bQuantizeTo8Bit);
+  virtual bool CanExportData() const { return false; }
+};
+source~~~~
+
+Now define a skeleton of an implementation in a corresponding `.cpp`
+file:
+
+[c++]
+source~~~~
+#include "YourConverter.h"
+
+YourConverter::YourConverter() {}
+
+bool YourConverter::ConvertToRAW(...)
+{
+  return false;
+}
+
+bool YourConverter::ConvertToNative(...)
+{
+  return false;
+}
+source~~~~
+
+(I've omitted the arguments here; they should be identical to those in
+the aforementioned header file.)
+
+Congratulations!  You've got a minimal converter which can be plugged in
+to ImageVis3D.  Let's get it part of ImageVis3D before we start trying
+to read any data.
+
+Building Your Reader
+~~~~~~~~~~~~~~~~~~~~
+
+ImageVis3D stores the list of files that are part of the program in a
+few places.  The files which are part of the IO subsystem are currently
+listed in `Tuvok/Tuvok.pro`.  In that file, you'll find two variables,
+`HEADERS' and `SOURCES', which identify which files to build.  You'll
+need to add your converter to the list specified in both variables.
+
+............................................................................
+  HEADERS += \
+           ...
+           IO/AbstrConverter.h \
+           IO/BOVConverter.h \
+           IO/YourFileHere.h \
+           IO/BrickedDataset.h \
+           ...
+  SOURCES += \
+           ...
+           IO/AbstrConverter.cpp \
+           IO/BOVConverter.cpp \
+           IO/YourFileHere.cpp \
+           IO/BrickedDataset.cpp \
+           ...
+............................................................................
+
+Once you've done that, rerun `qmake' from the root directory, and
+`make' to rebuild -- your converter should now be part of ImageVis3D!
+
+CAUTION: On Windows, the solution/project files have diverged from the
+settings given in the qmake project file.  You will need to add your
+files to the Visual Studio project file in the normal way.
+
+Register Your Converter with the IO Subsystem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To inform ImageVis3D that your converter exists, you need to register
+it with the IO subsystem.  Open up `IOManager.cpp` and add a
+`#include` for your converter's header file.  Then, in the `IOManager`
+constructor, add a line which creates an instance of your converter:
+
+[c++]
+source~~~~
+m_vpConverters.push_back(new YourConverter());
+source~~~~
+
+Register Your File Extensions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The constructor for your new converter should modify two internal class
+variables: `m_vConverterDesc` and `m_vSupportedExt`.  The former should
+be set to a short human-readable string that describes the file format.
+This must be a single line and should generally be a short phrase of a
+few words or less.  The second, `m_vSupportedExt`, should be populated
+with any extensions which are common for your file format.
+
+NOTE: You may leave `m_vSupportedExt` empty if you reimplement the
+`CanRead` method, described later in this document.
+
+See `BOVConverter.cpp` for an example.
+
+A good test at this point would be to add:
+
+[c++]
+source~~~~
+  MESSAGE("constructor!");
+source~~~~
+
+to your constructor, and:
+
+[c++]
+source~~~~
+  MESSAGE("convert!");
+source~~~~
+
+to your `ConvertToRAW` function.  Run ImageVis3D and enable the
+"Message" channel in the Debug Window (under "Help") tell it to load
+your data file.  The conversion will fail, but in the debug log you
+should see both of those messages (among many others).
+
+TIP: You can use the `WARNING` and `T_ERROR` macros to report warnings
+and errors, respectively, in your converter.
+
+Modify Raw Conversion Routine
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is where all of the work happens.  The purpose of this routine is
+to take an input data file, fill in the appropriate metadata as given
+by the arguments, and create a `strIntermediateFile` raw file with
+implicit structure.  Let's start with the arguments to the method:
+
+  - `strSourceFilename` - The filename where your data lives.  This is the file
+    that the user selected via the ImageVis3D UI.
+
+  - `strTempDir` - if you need to create any temporary files, you should
+    prepend this directory string to each of the filenames.
+
+  - `bNoUserInteraction` - if `true`, any ambiguities should be treated as
+    fatal errors.  Otherwise, you may query the user for more information (say,
+    via a `QMessageBox`).
+
+NOTE: Qt UI elements may not be used in the Tuvok IO subsystem.  If
+you want to perform a graphical query when `bNoUserInteraction` is
+`false`, you must put the code into the "imagevis3d" repository.  Since
+converters are registered dynamically, this will work fine; see the
+`DialogConverter` code.
+
+  - `iHeaderSkip` - Many formats are "sectioned", in that an initial header is
+    given which describes the data, and a raw chunk of data follows the header.
+    Write the byte offset of the start of such data into this header; write `0`
+    if there is no header or this field makes no sense for your data format.
+
+  - `iComponentSize` - write the number of bits per component into this
+    argument.  Note this is *bits*: so-called "short" data should write `16`
+    into this field.
+
+  - `iComponentCount` - write the number of components in the dataset into this
+    variable.  This will almost always be `1`, because volume rendering really
+    only makes sense for scalar fields.  ImageVis3D also currently supports
+    "color data", or RGBA data, in which case you would write `4` into this
+    variable.  Any other setting is likely to fail later on in processing.
+
+  - `bConvertEndianness` - set this to true if the endianness of the data
+    differs from the endianness of the current platform.  You can use the
+    static `EndianConvert::IsBigEndian()` method to determine the endianness of
+    the currently-running ImageVis3D.
+
+  - `bSigned` - set to true if the data are signed.
+
+  - `bIsFloat` - set to true if the data are floating point.  This only makes
+    sense in combination with certain values for `iComponentSize`.
+
+  - `vVolumeSize` - the dimensions of the dataset, in X (index 0), Y (1), and
+    Z (2)
+
+  - `vVolumeAspect` - default aspect ratio of these data, indexed just like
+    `vVolumeSize`.  Normally, set this to `(1,1,1)`.
+
+  - `strTitle` - any special string which identifies or describes the dataset.
+    Perhaps the name of the variable stored in this field.
+
+  - `eType` - See UVF's source for more detail, but generally just set this to
+    `UVFTables::ES_UNDEFINED`.
+
+  - `strIntermediateFile` - if you need to create a new file, set this to the
+    new file name.  Otherwise, copy `strSourceFilename` into here.
+
+  - `bDeleteIntermediateFile` - if you need to create a new file, you should
+    set this to `true` to make sure ImageVis3D deletes the file when it no
+    longer needs it.  Otherwise, make sure it is `false`, or ImageVis3D will
+    try to delete the input file!
+
+The format of `strIntermediateFile` should simply be raw data which
+varies slowly in X and quickly in Z.  These data should be written in
+"raw" format: do not use C++'s formatted IO routines if you need to
+generate these data.
+
+If all goes well, you should return `true` from this method.
+
+*Optional*: Reimplement the `CanRead` Predicate
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Since there are many converters available, at various times the IO
+subsystem needs to know *which* format within the candidate set is
+the appropriate one to use.  It does this via the `virtual` `CanRead`
+method.
+
+[c++]
+source~~~~
+virtual bool CanRead(const std::string& filename,
+                     const std::vector<int8_t> bytes) const;
+source~~~~
+
+The default implementation of this method is based purely on file
+extensions.  The extension[s] used for your format are the ones you
+added to the `m_vSupportedExt` vector in your constructor.  For most
+formats, this implementation will be perfectly fine.
+
+However, some converters need to know a bit more.  You might, for example,
+be working with a file format that relies on *prefixes* for file names
+instead of *postfixes* (i.e. "extensions").  You can override the
+`CanRead` method to implement a predicate more specific to your file
+format.  This method should return `true` if you are reasonably sure
+that your `ConvertToRAW` method will succeed for the given file, and
+`false` otherwise.
+
+The method takes two arguments.  The first is the name of the file that
+the IO subsystem is trying to find a converter for; for ImageVis3D,
+this will be the file selected by the user in the GUI.  If the user has
+selected multiple files (for example, while attempting to convert a
+time-dependent dataset), this will be the first file in the sequence.
+The second argument is an array which contains a few bytes from the
+beginning of the file (again, the first file if multiple files have
+been selected).
+
+IMPORTANT: Although the method is given the full file name and could
+easily open and scan the file to see if it is valid, please do *not* do
+this in your converter.  If every converter operated in this fashion,
+identifying the appropriate converter would be extremely slow.  The
+`bytes` array argument should be sufficient to identify the file; if
+you need more data to do so definitively, please contact the lead
+developers via the mailing lists and ask them to increase the number of
+bytes given to the method.
+
+You can use the `filename` parameter to key into any sort of custom
+file naming procedure that your file format has.  Many formats also
+implement some concept of `magic` bytes: the first few bytes of the
+files given in this format might always be statically set to a specific
+value.  As examples, the first 4 bytes of every NRRD file spell out
+"NRRD"; the QVis file format is based on a series of key-value pairs,
+and it is common for the first key to be "ObjectFileName".  `CanRead`
+implementations for these formats could key into such conventions to
+verify that the file is what it says it is.
+
+NOTE: You do not need to go all-out to detect errors at this stage.
+For example, you should not attempt to identify if the file is
+corrupted in the `CanRead` method.  This method is meant to quickly
+whittle down the list of available converters, and as such should do
+relatively little work, and certainly no dataset-sized work.  The
+correct place to detect file corruption would be in the `ConvertToRAW`
+method.
+
+*Optional*: Implement Native Conversion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Many converters in the IO subsystem implement the `ConvertToNative`
+method.  This allows one to use ImageVis3D to convert data from one
+file format to another.  To do this, implement the method and modify it
+to return `true`.  Make sure to also modify the `CanExportData` method
+to return `true`.
+
+Examples
+--------
+
+You can read ImageVis3D's existing code for converting data to get
+hints about how your converter should work.
+
+  - `REKConverter.cpp` - This is the smallest of ImageVis3D's
+    converters.  The EZRT file format that it reads is an example of a "header
+    plus raw data" format; as such, the converter reads in some metadata, and
+    then sets up the `iHeaderSkip` variable to the location where the data
+    starts.  No new output file is necessary.
+
+  - `QVISConverter.cpp` - This is purely a "header" file format: the user is
+    expected to select a file which has a simple ASCII header.  One of the
+    fields in this header gives the name of a raw filename which stores the
+    data.  The converter finds that field and sets `strIntermediateFile` to be
+    the raw filename.  Since the raw file is actually *part* of the input
+    dataset, the converter deliberately sets `bDeleteIntermediateFile` to
+    `false`.
+
+  - `TiffVolumeConverter.cpp` - A little-known feature of TIFF is that
+    it supports so-called "directories", which provide a mechanism to
+    store multiple images in a single file.  If these images align, then
+    a single TIFF file forms a volume instead of just an image.  This
+    converter provides an example of using an external library to read the
+    data, and then rewriting that data as a raw binary file that the rest
+    of ImageVis3D's IO routines can handle.
