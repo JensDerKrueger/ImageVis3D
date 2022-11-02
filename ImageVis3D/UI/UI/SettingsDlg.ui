@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>669</width>
-    <height>550</height>
+    <height>599</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -54,7 +54,7 @@
              <number>0</number>
             </property>
             <layout class="QGridLayout" name="gridLayout_9">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item row="0" column="0">
@@ -140,7 +140,7 @@
              <number>0</number>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_13">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item>
@@ -165,7 +165,7 @@
                 <number>0</number>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_14">
-                <property name="margin">
+                <property name="margin" stdset="0">
                  <number>0</number>
                 </property>
                 <item>
@@ -248,7 +248,6 @@
          </property>
          <property name="font">
           <font>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -368,7 +367,7 @@
              <number>0</number>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_BrickMax">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item>
@@ -431,7 +430,7 @@
              <number>0</number>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_BrickBuilder">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item>
@@ -578,7 +577,7 @@
              <enum>QFrame::Raised</enum>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_12">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item>
@@ -644,7 +643,7 @@
              <enum>QFrame::Raised</enum>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_18">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item>
@@ -802,7 +801,7 @@
              <enum>QFrame::Raised</enum>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_3">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item>
@@ -884,7 +883,7 @@
              <enum>QFrame::Raised</enum>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_5">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item>
@@ -956,7 +955,7 @@
              <enum>QFrame::Raised</enum>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item>
@@ -1028,7 +1027,7 @@
              <enum>QFrame::Raised</enum>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item>
@@ -1112,7 +1111,7 @@
              <number>0</number>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_11">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item>
@@ -1144,7 +1143,7 @@
              <number>0</number>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_6">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item>
@@ -1186,7 +1185,7 @@
              <number>0</number>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_10">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item>
@@ -1362,7 +1361,7 @@
           <property name="spacing">
            <number>3</number>
           </property>
-          <property name="margin">
+          <property name="margin" stdset="0">
            <number>0</number>
           </property>
           <item>
@@ -1585,7 +1584,7 @@
              <enum>QFrame::Raised</enum>
             </property>
             <layout class="QGridLayout" name="gridLayout_2">
-             <property name="margin">
+             <property name="margin" stdset="0">
               <number>0</number>
              </property>
              <item row="0" column="0">
@@ -1718,32 +1717,32 @@
   <connection>
    <sender>horizontalSlider_GPUMem</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>label_GPUMem_Displ</receiver>
-   <slot>setNum(int)</slot>
+   <receiver>SettingsDlg</receiver>
+   <slot>GPUMemChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>397</x>
      <y>81</y>
     </hint>
     <hint type="destinationlabel">
-     <x>616</x>
-     <y>81</y>
+     <x>334</x>
+     <y>299</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>horizontalSlider_CPUMem</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>label_CPUMem_Displ</receiver>
-   <slot>setNum(int)</slot>
+   <receiver>SettingsDlg</receiver>
+   <slot>CPUMemChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>586</x>
      <y>106</y>
     </hint>
     <hint type="destinationlabel">
-     <x>616</x>
-     <y>106</y>
+     <x>334</x>
+     <y>299</y>
     </hint>
    </hints>
   </connection>
@@ -2276,6 +2275,8 @@
   <slot>PickLogFile()</slot>
   <slot>SelectTempDir()</slot>
   <slot>MaxBSChanged(int)</slot>
+  <slot>GPUMemChanged(int)</slot>
+  <slot>CPUMemChanged(int)</slot>
   <slot>BuilderBSChanged(int)</slot>
   <slot>MemMaxChanged()</slot>
   <slot>OverrideMaxToggled(bool)</slot>

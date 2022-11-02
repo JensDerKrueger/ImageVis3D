@@ -21,8 +21,8 @@ class BasicSettingsDlg : public QDialog
   public:
     BasicSettingsDlg(tuvok::MasterController& masterController,
                      enum PerformanceLevel defaultLevel = MAX_RESPONSIVENESS,
-                     QWidget* parent = 0,
-                     Qt::WindowFlags flags = 0);
+                     QWidget* parent = nullptr,
+                     Qt::WindowFlags flags = Qt::WindowFlags());
     virtual ~BasicSettingsDlg();
 
     enum PerformanceLevel GetPerformanceLevel() const;

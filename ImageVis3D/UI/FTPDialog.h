@@ -51,7 +51,7 @@ class FTPDialog : public QDialog, protected Ui_FTPDialog
 {
   Q_OBJECT
   public:
-    FTPDialog(const std::wstring& strSource, const std::wstring& strTargetServer, const std::wstring& strTargetPath, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    FTPDialog(const std::wstring& strSource, const std::wstring& strTargetServer, const std::wstring& strTargetPath, QWidget* parent, Qt::WindowFlags flags = Qt::WindowFlags());
     virtual ~FTPDialog();
 
     void Start();

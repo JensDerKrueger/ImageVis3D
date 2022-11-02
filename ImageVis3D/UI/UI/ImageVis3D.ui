@@ -7941,6 +7941,7 @@
   <slot>UpdateMenus()</slot>
   <slot>ExportDataset()</slot>
   <slot>UseIso()</slot>
+  <slot>ResetToDefaultWorkspace()</slot>
   <slot>ClearDebugWin()</slot>
   <slot>SetDebugViewMask()</slot>
   <slot>Transfer1DSetColors()</slot>
@@ -7954,7 +7955,7 @@
   <slot>Transfer2DDeleteGradient()</slot>
   <slot>Transfer2DChooseGradientColor()</slot>
   <slot>Transfer2DChooseGradientOpacity()</slot>
-  <slot>SetFoV()</slot>
+  <slot>SetFoV(int)</slot>
   <slot>Transfer2DUpdateGradientBox()</slot>
   <slot>Transfer2DSave()</slot>
   <slot>Transfer2DLoad()</slot>

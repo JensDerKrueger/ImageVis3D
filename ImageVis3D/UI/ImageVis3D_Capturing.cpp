@@ -113,7 +113,7 @@ void MainWindow::CaptureRotation() {
     if (m_pActiveRenderWin->IsRegion2D(renderRegion) &&
         m_pActiveRenderWin->GetUseMIP(renderRegion)) {
       MIPRotDialog mipRotDialog(iNumImages, bOrthoView, bStereo, bUseLOD,
-                                iEyeDist, this);
+                                iEyeDist, this, Qt::Dialog);
       if (mipRotDialog.exec() == QDialog::Accepted) {
         ok = true;
         iNumImages = mipRotDialog.GetNumImages();

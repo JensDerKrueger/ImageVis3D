@@ -47,12 +47,6 @@ ShaderDescriptor::ShaderDescriptor(const std::vector<std::wstring>& vertex,
   }
 }
 
-// SysTools::FileExists can take a std::string OR a std::wstring.  This makes
-// it hard to use in a function composition, because the compiler cannot figure
-// out which one we want, and it's not a template or anything so we cannot just
-// be explicit.
-// This serves to rename it to avoid the ambiguity.
-static bool exists(std::wstring s) { return SysTools::FileExists(s); }
 // we could technically achieve this by composing std::plus with
 // std::plus, but my god is that a nightmare in c++03.
 static std::wstring concat(std::wstring a, std::wstring b, std::wstring c) {
@@ -63,9 +57,16 @@ static std::wstring concat(std::wstring a, std::wstring b, std::wstring c) {
 /// list which don't exist.
 static std::vector<std::wstring> existing(std::vector<std::wstring> directories)
 {
+  // SysTools::FileExists can take a std::string OR a std::wstring.  This makes
+  // it hard to use in a function composition, because the compiler cannot figure
+  // out which one we want, and it's not a template or anything so we cannot just
+  // be explicit.
+  // This serves to rename it to avoid the ambiguity.
+  auto notexists = [](std::wstring s){ return !SysTools::FileExists(s); };
+
   typedef std::vector<std::wstring> sv;
   sv::iterator end = std::remove_if(directories.begin(), directories.end(),
-                                    std::not1(std::ptr_fun(exists)));
+                                    notexists);
   for(sv::const_iterator e = end; e != directories.end(); ++e) {
     if (!e->empty())
       WARNING("Directory %s does not exist!", SysTools::toNarrow(*e).c_str());
@@ -88,17 +89,25 @@ static std::wstring find_filename(const std::vector<std::wstring>& directories,
     return filename;
   }
 #endif
-
+  
   typedef std::vector<std::wstring> sv;
   // okay, now prepend each directory into our flename and see if we find a
   // match.
+  
+  // SysTools::FileExists can take a std::string OR a std::wstring.  This makes
+  // it hard to use in a function composition, because the compiler cannot figure
+  // out which one we want, and it's not a template or anything so we cannot just
+  // be explicit.
+  // This serves to rename it to avoid the ambiguity.
+  auto exists = [](std::wstring s){ return SysTools::FileExists(s); };
+
   using namespace std::placeholders;
   const std::wstring dirsep = L"/";
   // the functor is a composition: 'exists(add(_1, dirsep, filename))'
   sv::const_iterator fn =
     std::find_if(directories.begin(), directories.end(),
                  std::bind(
-                   std::ptr_fun(exists),
+                   exists,
                    std::bind(concat, _1, dirsep, filename)
                  ));
 

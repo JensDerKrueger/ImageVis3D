@@ -2,6 +2,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <algorithm>
+#include <random>
 #include "VolumeTools.h"
 #include "Hilbert.h"
 
@@ -144,7 +145,10 @@ RandomLayout::RandomLayout(UINT64VECTOR3 const& vDomainSize)
   , m_vLookUp((size_t)vDomainSize.volume())
 {
   std::generate(m_vLookUp.begin(), m_vLookUp.end(), UniqueNumber<uint64_t>());
-  std::random_shuffle(m_vLookUp.begin(), m_vLookUp.end());
+  
+  std::random_device rng;
+  std::mt19937 urng(rng());
+  std::shuffle(m_vLookUp.begin(), m_vLookUp.end(), urng);
 }
 
 uint64_t RandomLayout::GetLinearIndex(UINT64VECTOR3 const& vSpatialPosition)

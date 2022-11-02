@@ -797,7 +797,7 @@ void MainWindow::LoadDirectory() {
     pleaseWait.SetText("Scanning directory for files, please wait  ...");
     pleaseWait.AttachLabel(&m_MasterController);
 
-    BrowseData browseDataDialog(m_MasterController, (QDialog*)&pleaseWait, directoryName, this);
+    BrowseData browseDataDialog(m_MasterController, (QDialog*)&pleaseWait, directoryName, this, Qt::Dialog);
 
     if (browseDataDialog.DataFound()) {
       if (browseDataDialog.exec() == QDialog::Accepted) {

@@ -1016,20 +1016,6 @@ void ExtendedOctreeConverter::WriteBrickToDisk(ExtendedOctree &tree, uint8_t* pD
 }
 
 /*
-  HasIndex:
-
-  Function used for find_if, returns true iff a cache entry has a certain index
-*/
-struct HasIndex :
-  public std::binary_function<ExtendedOctreeConverter::CacheEntry,
-                              uint64_t, bool> {
-  bool operator()(const ExtendedOctreeConverter::CacheEntry& cacheEntry,
-                  uint64_t index) const {
-    return cacheEntry.m_index == index;
-  }
-};
-
-/*
   GetBrick:
 
   Retrieves a brick from the tree. First we check if the cache is
@@ -1046,7 +1032,8 @@ void ExtendedOctreeConverter::GetBrick(uint8_t* pData, ExtendedOctree &tree,
     return;
   }
 
-  BrickCacheIter cacheEntry = std::find_if(m_vBrickCache.begin(), m_vBrickCache.end(), std::bind2nd(HasIndex(), index));
+  auto hasIndex = [index](const ExtendedOctreeConverter::CacheEntry& cacheEntry){ return cacheEntry.m_index == index; };
+  BrickCacheIter cacheEntry = std::find_if(m_vBrickCache.begin(), m_vBrickCache.end(), hasIndex);
 
   if (cacheEntry == m_vBrickCache.end()) {
     // cache miss
@@ -1100,7 +1087,8 @@ void ExtendedOctreeConverter::SetBrick(uint8_t* pData, ExtendedOctree &tree, uin
     return;
   }
 
-  BrickCacheIter cacheEntry = std::find_if(m_vBrickCache.begin(), m_vBrickCache.end(), std::bind2nd(HasIndex(), index));
+  auto hasIndex = [index](const ExtendedOctreeConverter::CacheEntry& cacheEntry){ return cacheEntry.m_index == index; };
+  BrickCacheIter cacheEntry = std::find_if(m_vBrickCache.begin(), m_vBrickCache.end(), hasIndex);
 
   tree.m_vTOC[size_t(index)].m_iLength =
     tree.ComputeBrickSize(tree.IndexToBrickCoords(index)).volume() *

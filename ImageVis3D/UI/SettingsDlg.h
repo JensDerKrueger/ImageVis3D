@@ -50,8 +50,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
   public:
     SettingsDlg(bool bWarnAPIChange,
                 MasterController& masterController,
-                QWidget* parent = 0,
-                Qt::WindowFlags flags = 0);
+                QWidget* parent = nullptr,
+                Qt::WindowFlags flags = Qt::WindowFlags());
     virtual ~SettingsDlg();
 
     uint64_t        GetGPUMem() const;
@@ -174,6 +174,8 @@ class SettingsDlg : public QDialog, protected Ui_SettingsDlg
     void PickLogFile();
     void SelectTempDir();
     void MaxBSChanged(int iValue);
+    void CPUMemChanged(int iValue);
+    void GPUMemChanged(int iValue);
     void BuilderBSChanged(int iValue);
     void ToggleExperimentalFeatures();
     void SwitchToBasic();

@@ -55,8 +55,8 @@ class ScaleAndBiasDlg : public QDialog, protected Ui_ScaleAndBiasDlg
                     size_t index,
                     const FLOATVECTOR3& vmin, 
                     const FLOATVECTOR3& vmax,
-                    QWidget* parent = 0 , 
-                    Qt::WindowFlags flags = 0);
+                    QWidget* parent ,
+                    Qt::WindowFlags flags = Qt::Dialog);
     virtual ~ScaleAndBiasDlg();
 
     FLOATVECTOR3 m_scaleVec;

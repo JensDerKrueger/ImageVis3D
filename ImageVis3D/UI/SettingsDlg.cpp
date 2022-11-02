@@ -676,6 +676,16 @@ void SettingsDlg::MaxBSChanged(int iValue) {
   label_BSMaxUnit->setText(str);
 }
 
+void SettingsDlg::CPUMemChanged(int iValue) {
+  QString str(iValue);
+  label_CPUMem_Displ->setText(str);
+}
+
+void SettingsDlg::GPUMemChanged(int iValue) {
+  QString str(iValue);
+  label_GPUMem_Displ->setText(str);
+}
+
 void SettingsDlg::BuilderBSChanged(int iValue) {
   QString str = tr("%1^3").arg(MathTools::Pow2(uint32_t(iValue)));
   if (horizontalSlider_BSMax->value() < iValue) {

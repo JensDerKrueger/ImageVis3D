@@ -30,7 +30,6 @@ unix:QMAKE_CFLAGS += -fno-strict-aliasing
 !macx-clang:unix:QMAKE_CXXFLAGS += -fopenmp
 !macx-clang:unix:QMAKE_LFLAGS += -fopenmp -bullshit-link-flag
 !macx-clang:unix:LIBS  += -lGLU
-
 macx-clang:QMAKE_CXXFLAGS += -stdlib=libc++ #
 # macx:QMAKE_CFLAGS +=
 macx-clang:LIBS        += -stdlib=libc++ -framework CoreFoundation #

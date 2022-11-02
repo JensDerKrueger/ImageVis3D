@@ -48,7 +48,7 @@ class BrowseData : public QDialog, protected Ui_BrowseData
 {
   Q_OBJECT
   public:
-    BrowseData(MasterController& pMasterController, QDialog* pleaseWaitDialog, QString strDir, QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    BrowseData(MasterController& pMasterController, QDialog* pleaseWaitDialog, QString strDir, QWidget* parent, Qt::WindowFlags flags);
     virtual ~BrowseData();
 
     bool DataFound() {return m_bDataFound;}
