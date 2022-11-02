@@ -430,6 +430,7 @@ public:
   static Type        getDefault() { return 0.0; }
 };
 
+/*
 template<>
 class LuaStrictStack<const char *>
 {
@@ -461,7 +462,7 @@ public:
   static std::string getTypeStr() { return "string"; }
   static std::string getDefault() { return ""; }
 };
-
+*/
 template<>
 class LuaStrictStack<std::string>
 {
@@ -528,7 +529,7 @@ public:
 };
 
 //**************************************
-
+/*
 template<>
 class LuaStrictStack<const wchar_t*>
 {
@@ -560,7 +561,7 @@ public:
   static std::string getTypeStr() { return "wchar_t*"; }
   static std::string getDefault() { return ""; }
 };
-
+*/
 template<>
 class LuaStrictStack<std::wstring>
 {
